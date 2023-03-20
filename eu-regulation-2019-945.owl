@@ -63,13 +63,15 @@
 #################################################################
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#distanceValue
-:distanceValue rdf:type owl:DatatypeProperty ;
+:distanceValue rdf:type owl:DatatypeProperty ,
+                        owl:FunctionalProperty ;
                rdfs:domain :Distance ;
                rdfs:range xsd:double .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#followMeModeOn
-:followMeModeOn rdf:type owl:DatatypeProperty ;
+:followMeModeOn rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
                 rdfs:domain :FollowMeMode ;
                 rdfs:range xsd:boolean ;
                 rdfs:comment "Function of follow-me mode is on/off (true/false)" .
@@ -100,14 +102,16 @@
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasMaxNominalVoltage
-:hasMaxNominalVoltage rdf:type owl:DatatypeProperty ;
+:hasMaxNominalVoltage rdf:type owl:DatatypeProperty ,
+                               owl:FunctionalProperty ;
                       rdfs:domain :UAS ;
                       rdfs:range xsd:double ;
                       rdfs:comment "Maximum nominal voltage in volt" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasMaxSpeed
-:hasMaxSpeed rdf:type owl:DatatypeProperty ;
+:hasMaxSpeed rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
              rdfs:domain :UAS ;
              rdfs:range xsd:double ;
              rdfs:comment "Maximum speed in level flight in m/s" .
@@ -208,7 +212,9 @@
               rdfs:subClassOf [ rdf:type owl:Restriction ;
                                 owl:onProperty :followMeModeOn ;
                                 owl:someValuesFrom xsd:boolean
-                              ] .
+                              ] ;
+              rdfs:comment "Follow-me mode means a mode of operation of a UAS where the unmanned aircraft constantly follows the remote pilot within a predetermined radius" ;
+              rdfs:label "Follow-me mode" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#RemotePilot
