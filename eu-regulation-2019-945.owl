@@ -8,19 +8,33 @@
 
 <http://w3id.org/hsu-aut/eu-regulation2019-945> rdf:type owl:Ontology ;
                                                  owl:versionIRI <http://w3id.org/hsu-aut/eu-regulation2019-945/1.0.0> ;
-                                                 rdfs:comment "An ontology for Commission Delegated Regulation (EU) 2019/945 of 12 March 2019 on unmanned aircraft systems and on third-country operators of unmanned aircraft systems. See https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R0945 for access to the standard." ;
+                                                 rdfs:comment "An ontology for Commission Delegated Regulation (EU) 2019/945 of 12 March 2019 on unmanned aircraft systems and on third-country operators of unmanned aircraft systems. See https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R0945 for access to the law." ;
                                                  rdfs:isDefinedBy "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R0945" .
 
 #################################################################
 #    Object Properties
 #################################################################
 
-###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasDroneLicense
-:hasDroneLicense rdf:type owl:ObjectProperty ,
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasDistance
+:hasDistance rdf:type owl:ObjectProperty ;
+             owl:inverseOf :isDistanceOf ;
+             rdf:type owl:AsymmetricProperty ,
+                      owl:IrreflexiveProperty ;
+             rdfs:domain [ rdf:type owl:Class ;
+                           owl:unionOf ( :RemotePilot
+                                         :UAS
+                                       )
+                         ] ;
+             rdfs:range :Distance .
+
+
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasFollowMeMode
+:hasFollowMeMode rdf:type owl:ObjectProperty ,
+                          owl:FunctionalProperty ,
                           owl:AsymmetricProperty ,
                           owl:IrreflexiveProperty ;
-                 rdfs:domain :RemotePilot ;
-                 rdfs:range :DroneLicense .
+                 rdfs:domain :UAS ;
+                 rdfs:range :FollowMeMode .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasRemotePilot
@@ -28,48 +42,83 @@
                          owl:FunctionalProperty ,
                          owl:AsymmetricProperty ,
                          owl:IrreflexiveProperty ;
-                rdfs:domain :UASClassification ;
+                rdfs:domain :UAS ;
                 rdfs:range :RemotePilot .
+
+
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#isDistanceOf
+:isDistanceOf rdf:type owl:ObjectProperty ,
+                       owl:AsymmetricProperty ,
+                       owl:IrreflexiveProperty ;
+              rdfs:domain :Distance ;
+              rdfs:range [ rdf:type owl:Class ;
+                           owl:unionOf ( :RemotePilot
+                                         :UAS
+                                       )
+                         ] .
 
 
 #################################################################
 #    Data properties
 #################################################################
 
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#distanceValue
+:distanceValue rdf:type owl:DatatypeProperty ;
+               rdfs:domain :Distance ;
+               rdfs:range xsd:double .
+
+
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#followMeModeOn
+:followMeModeOn rdf:type owl:DatatypeProperty ;
+                rdfs:domain :FollowMeMode ;
+                rdfs:range xsd:boolean ;
+                rdfs:comment "Function of follow-me mode is on/off (true/false)" .
+
+
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasAutomaticControlMode
+:hasAutomaticControlMode rdf:type owl:DatatypeProperty ,
+                                  owl:FunctionalProperty ;
+                         rdfs:domain :UAS ;
+                         rdfs:range xsd:boolean ;
+                         rdfs:comment "capable / not capable (true/false) of automatic control modes. Flight stabilisation assistance with no direct effect on the trajectory and lost link assistance provided that a pre-determined fixed position of the flight controls in case of lost link is available, do not count as automatic control modes." .
+
+
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasMTOM
 :hasMTOM rdf:type owl:DatatypeProperty ,
                   owl:FunctionalProperty ;
-         rdfs:domain :UASClassification ;
+         rdfs:domain :UAS ;
          rdfs:range xsd:double ;
-         rdfs:comment "Each UAS has a specific Maximum Take-off Mass (MTOM) in kg, which includes its own weight and payload." .
+         rdfs:comment "Maximum take-off mass (MTOM): Maximum UA mass, including payload and fuel, as defined by the manufacturer or the builder, at which the UA can be operated" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasMaxHeight
 :hasMaxHeight rdf:type owl:DatatypeProperty ,
                        owl:FunctionalProperty ;
-              rdfs:domain :UASClassification ;
+              rdfs:domain :UAS ;
               rdfs:range xsd:double ;
-              rdfs:comment "Maximum flight height above starting point in meters" .
+              rdfs:comment "Maximum attainable height above take-off point in meters" .
+
+
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasMaxNominalVoltage
+:hasMaxNominalVoltage rdf:type owl:DatatypeProperty ;
+                      rdfs:domain :UAS ;
+                      rdfs:range xsd:double ;
+                      rdfs:comment "Maximum nominal voltage in volt" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasMaxSpeed
 :hasMaxSpeed rdf:type owl:DatatypeProperty ;
-             rdfs:domain :UASClassification ;
-             rdfs:range xsd:double .
-
-
-###  http://w3id.org/hsu-aut/eu-regulation2019-945#hasNoAutomaticControlMode
-:hasNoAutomaticControlMode rdf:type owl:DatatypeProperty ,
-                                    owl:FunctionalProperty ;
-                           rdfs:domain :UASClassification ;
-                           rdfs:range xsd:boolean .
+             rdfs:domain :UAS ;
+             rdfs:range xsd:double ;
+             rdfs:comment "Maximum speed in level flight in m/s" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#maxHeightSelectable
 :maxHeightSelectable rdf:type owl:DatatypeProperty ,
                               owl:FunctionalProperty ;
-                     rdfs:domain :UASClassification ;
-                     rdfs:range xsd:boolean .
+                     rdfs:domain :UAS ;
+                     rdfs:range xsd:boolean ;
+                     rdfs:comment "Height above the surface or above the takeoff point can/can't (true/false) be limited to 120 meters or to a value selectable by the remote pilot." .
 
 
 #################################################################
@@ -78,295 +127,111 @@
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#C0
 :C0 rdf:type owl:Class ;
-    owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasRemotePilot ;
-                                                 owl:someValuesFrom :RemotePilot
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMTOM ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "0.25"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMaxHeight ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "120.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMaxSpeed ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "19.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                             ) ;
-                          rdf:type owl:Class
-                        ] ;
-    rdfs:subClassOf :UASClassification .
+    rdfs:subClassOf :UAS ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxHeight ;
+                      owl:someValuesFrom xsd:double
+                    ] ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxNominalVoltage ;
+                      owl:someValuesFrom xsd:double
+                    ] ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxSpeed ;
+                      owl:someValuesFrom xsd:double
+                    ] ;
+    rdfs:label "Class C0 UAS" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#C1
 :C1 rdf:type owl:Class ;
-    owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasRemotePilot ;
-                                                 owl:someValuesFrom [ owl:intersectionOf ( :RemotePilot
-                                                                                           [ rdf:type owl:Class ;
-                                                                                             owl:unionOf ( [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue :A2
-                                                                                                           ]
-                                                                                                           [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue <http://w3id.org/hsu-aut/eu-regulation2019-945#A1/A3>
-                                                                                                           ]
-                                                                                                         )
-                                                                                           ]
-                                                                                         ) ;
-                                                                      rdf:type owl:Class
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMTOM ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "0.9"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMaxHeight ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "120.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMaxSpeed ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "19.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :maxHeightSelectable ;
-                                                 owl:hasValue "true"^^xsd:boolean
-                                               ]
-                                             ) ;
-                          rdf:type owl:Class
-                        ] ;
-    rdfs:subClassOf :UASClassification .
+    rdfs:subClassOf :UAS ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxHeight ;
+                      owl:someValuesFrom xsd:double
+                    ] ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxNominalVoltage ;
+                      owl:someValuesFrom xsd:double
+                    ] ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxSpeed ;
+                      owl:someValuesFrom xsd:double
+                    ] ;
+    rdfs:label "Class C1 UAS" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#C2
 :C2 rdf:type owl:Class ;
-    owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasRemotePilot ;
-                                                 owl:someValuesFrom [ owl:intersectionOf ( :RemotePilot
-                                                                                           [ rdf:type owl:Class ;
-                                                                                             owl:unionOf ( [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue :A2
-                                                                                                           ]
-                                                                                                           [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue <http://w3id.org/hsu-aut/eu-regulation2019-945#A1/A3>
-                                                                                                           ]
-                                                                                                         )
-                                                                                           ]
-                                                                                         ) ;
-                                                                      rdf:type owl:Class
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMTOM ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "4.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMaxHeight ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "120.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :maxHeightSelectable ;
-                                                 owl:hasValue "true"^^xsd:boolean
-                                               ]
-                                             ) ;
-                          rdf:type owl:Class
-                        ] ;
-    rdfs:subClassOf :UASClassification .
+    rdfs:subClassOf :UAS ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxHeight ;
+                      owl:someValuesFrom xsd:double
+                    ] ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxNominalVoltage ;
+                      owl:someValuesFrom xsd:double
+                    ] ;
+    rdfs:label "Class C2 UAS" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#C3
 :C3 rdf:type owl:Class ;
-    owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasRemotePilot ;
-                                                 owl:someValuesFrom [ owl:intersectionOf ( :RemotePilot
-                                                                                           [ rdf:type owl:Class ;
-                                                                                             owl:unionOf ( [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue :A2
-                                                                                                           ]
-                                                                                                           [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue <http://w3id.org/hsu-aut/eu-regulation2019-945#A1/A3>
-                                                                                                           ]
-                                                                                                         )
-                                                                                           ]
-                                                                                         ) ;
-                                                                      rdf:type owl:Class
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMTOM ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "25.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMaxHeight ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "120.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :maxHeightSelectable ;
-                                                 owl:hasValue "true"^^xsd:boolean
-                                               ]
-                                             ) ;
-                          rdf:type owl:Class
-                        ] ;
-    rdfs:subClassOf :UASClassification .
+    rdfs:subClassOf :UAS ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxHeight ;
+                      owl:someValuesFrom xsd:double
+                    ] ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasMaxNominalVoltage ;
+                      owl:someValuesFrom xsd:double
+                    ] ;
+    rdfs:label "Class C3 UAS" .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#C4
 :C4 rdf:type owl:Class ;
-    owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasRemotePilot ;
-                                                 owl:someValuesFrom [ owl:intersectionOf ( :RemotePilot
-                                                                                           [ rdf:type owl:Class ;
-                                                                                             owl:unionOf ( [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue :A2
-                                                                                                           ]
-                                                                                                           [ rdf:type owl:Restriction ;
-                                                                                                             owl:onProperty :hasDroneLicense ;
-                                                                                                             owl:hasValue <http://w3id.org/hsu-aut/eu-regulation2019-945#A1/A3>
-                                                                                                           ]
-                                                                                                         )
-                                                                                           ]
-                                                                                         ) ;
-                                                                      rdf:type owl:Class
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasMTOM ;
-                                                 owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                                      owl:onDatatype xsd:double ;
-                                                                      owl:withRestrictions ( [ xsd:maxInclusive "25.0"^^xsd:double
-                                                                                             ]
-                                                                                           )
-                                                                    ]
-                                               ]
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :hasNoAutomaticControlMode ;
-                                                 owl:hasValue "true"^^xsd:boolean
-                                               ]
-                                             ) ;
-                          rdf:type owl:Class
-                        ] ;
-    rdfs:subClassOf :UASClassification .
+    rdfs:subClassOf :UAS ;
+    rdfs:label "Class C4 UAS" .
 
 
-###  http://w3id.org/hsu-aut/eu-regulation2019-945#DroneLicense
-:DroneLicense rdf:type owl:Class ;
-              owl:equivalentClass [ rdf:type owl:Class ;
-                                    owl:oneOf ( :A2
-                                                :None
-                                                <http://w3id.org/hsu-aut/eu-regulation2019-945#A1/A3>
-                                              )
-                                  ] .
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#Distance
+:Distance rdf:type owl:Class ;
+          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                            owl:onProperty :distanceValue ;
+                            owl:someValuesFrom xsd:double
+                          ] .
+
+
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#FollowMeMode
+:FollowMeMode rdf:type owl:Class ;
+              rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                owl:onProperty :followMeModeOn ;
+                                owl:someValuesFrom xsd:boolean
+                              ] .
 
 
 ###  http://w3id.org/hsu-aut/eu-regulation2019-945#RemotePilot
 :RemotePilot rdf:type owl:Class ;
-             rdfs:subClassOf [ rdf:type owl:Restriction ;
-                               owl:onProperty :hasDroneLicense ;
-                               owl:allValuesFrom :DroneLicense
-                             ] .
+             rdfs:comment "Natural person responsible for safely conducting the flight of a UA by operating its flight controls, either manually or, when the UA flies automatically, by monitoring its course and remaining able to intervene and change its course at any time" .
 
 
-###  http://w3id.org/hsu-aut/eu-regulation2019-945#UASClassification
-:UASClassification rdf:type owl:Class ;
-                   rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                     owl:onProperty :hasRemotePilot ;
-                                     owl:someValuesFrom :RemotePilot
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :hasMTOM ;
-                                     owl:someValuesFrom xsd:double
-                                   ] ;
-                   rdfs:label "Unmanned aircraft system classification" .
-
-
-#################################################################
-#    Individuals
-#################################################################
-
-###  http://w3id.org/hsu-aut/eu-regulation2019-945#A2
-:A2 rdf:type owl:NamedIndividual ,
-             :DroneLicense .
-
-
-###  http://w3id.org/hsu-aut/eu-regulation2019-945#None
-:None rdf:type owl:NamedIndividual ,
-               :DroneLicense .
-
-
-###  http://w3id.org/hsu-aut/eu-regulation2019-945#A1/A3
-<http://w3id.org/hsu-aut/eu-regulation2019-945#A1/A3> rdf:type owl:NamedIndividual ,
-                                                               :DroneLicense .
-
-
-#################################################################
-#    General axioms
-#################################################################
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :DroneLicense
-                :RemotePilot
-                :UASClassification
-              )
-] .
+###  http://w3id.org/hsu-aut/eu-regulation2019-945#UAS
+:UAS rdf:type owl:Class ;
+     rdfs:subClassOf [ rdf:type owl:Restriction ;
+                       owl:onProperty :hasRemotePilot ;
+                       owl:someValuesFrom :RemotePilot
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :hasAutomaticControlMode ;
+                       owl:someValuesFrom xsd:boolean
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :hasMTOM ;
+                       owl:someValuesFrom xsd:double
+                     ] ;
+     rdfs:comment "Unmanned aircraft system means any aircraft operating or designed to operate autonomously or to be piloted remotely without a pilot on board and has the equipment to control it remotely" ;
+     rdfs:label "Unmanned aircraft system" .
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
